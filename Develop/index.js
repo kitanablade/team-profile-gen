@@ -9,12 +9,16 @@ function welcome() {
   console.log(
     "Welcome to the Team Profile Builder. To get started, please enter your team manager's information:"
   );
-  const employeeInfo = getEmployeeInfo();
-  addManager(employeeInfo);
+  welcomeHelper();
 }
 
-function selectWorkers() {
-  inquirer
+async function welcomeHelper() {
+    const employeeInfo = await getEmployeeInfo();
+    await addManager(employeeInfo);  
+}
+
+async function selectWorkers() {
+  let addWorker = await inquirer
     .prompt([
       {
         type: "list",
@@ -22,96 +26,89 @@ function selectWorkers() {
         message: "Please select from one of the following options:",
         choices: ["Add new Engineer", "Add new Intern", "QUIT"],
       },
-    ])
-    .then((addWorker) => {
-      switch (addWorker.choices) {
+    ]);
+    switch (addWorker.choices) {
         case "Add new Engineer":
-          addEngineer();
-          selectWorkers();
+          await addEngineer();
+          await selectWorkers();
           break;
         case "Add new Intern":
-          addIntern();
-          selectWorkers();
+          await addIntern();
+          await selectWorkers();
           break;
         case "QUIT":
           console.log("Your team profile is ready!");
       }
-    });
 }
-function addManager(employeeInfo) {
-  inquirer
+
+async function addManager(employeeInfo) {
+  let mgrInfo = await inquirer
     .prompt([
       {
         type: "input",
         name: "officeNumber",
         message: "Office Number:",
       },
-    ])
-    .then((mgrInfo) => {
-      const manager = new Manager(
+    ]);
+
+    const manager = new Manager(
         employeeInfo.name,
         employeeInfo.id,
         employeeInfo.email,
         mgrInfo.officeNumber
       );
-      selectWorkers();
-    });
+    await selectWorkers();
 }
 
-function addEngineer() {
+async function addEngineer() {
   console.log("Please enter the engineer's information: ");
   const employeeInfo = getEmployeeInfo;
-  inquirer
+  let engrInfo = await inquirer
     .prompt([
       {
         type: "input",
         name: "githubUsername",
         message: "Github Username:",
       },
-    ])
-    .then((engrInfo) => {
-      const engineer = new Engineer(
+    ]);
+    const engineer = new Engineer(
         employeeInfo.name,
         employeeInfo.id,
         employeeInfo.email,
         engrInfo.githubUsername
       );
       selectWorkers();
-    });
 }
 
-function addIntern() {
+async function addIntern() {
   console.log("Please enter the intern's information: ");
   const employeeInfo = getEmployeeInfo;
-  inquirer
+  let internInfo = await inquirer
     .prompt([
       {
         type: "input",
         name: "school",
         message: "School:",
       },
-    ])
-    .then((internInfo) => {
-      const intern = new Intern(
+    ]);
+    const intern = new Intern(
         employeeInfo.name,
         employeeInfo.id,
         employeeInfo.email,
         internInfo.school
       );
-      selectWorkers();
-    });
+      await selectWorkers();
 }
 
 // Prompts user for the information common to all employee types and returns: (name, id, and email)
 async function getEmployeeInfo() {
-  inquirer
+    return await inquirer
     .prompt([
       {
         type: "input",
         name: "name",
         message: "Name:",
       },
-
       {
         type: "input",
         name: "id",
@@ -122,9 +119,7 @@ async function getEmployeeInfo() {
         name: "email",
         message: "Email Adress:",
       },
-    ])
-    .then((empInfo) => {
-      return empInfo;
-    });
+    ]);
 }
+
 welcome();
