@@ -1,10 +1,9 @@
-const fs = require('fs');
+const fs = require("fs");
 const inquirer = require("inquirer");
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Manager = require("./lib/Manager");
 const Intern = require("./lib/Intern");
-//const GenerateHtml = require("./util/generateHtml");
 const generateHtml = require("./util/generateHtml");
 
 const team = [];
@@ -22,8 +21,6 @@ async function welcomeHelper() {
   selectWorkers();
 }
 
-let quit = false;
-// while (!quit) {
 async function selectWorkers() {
   let addWorker = await inquirer.prompt([
     {
@@ -33,7 +30,7 @@ async function selectWorkers() {
       choices: ["Add new Engineer", "Add new Intern", "QUIT"],
     },
   ]);
-  //console.log(`${JSON.stringify(addWorker)}`);
+
   switch (addWorker.selectWorkersOrQuit) {
     case "Add new Engineer":
       await addEngineer();
@@ -44,13 +41,10 @@ async function selectWorkers() {
       await selectWorkers();
       break;
     case "QUIT":
-      //quit = true;
       console.info(team);
-        createHtmlFile();
-      
+      createHtmlFile();
   }
 }
-// }
 
 async function addManager(employeeInfo) {
   let mgrInfo = await inquirer.prompt([
@@ -134,13 +128,13 @@ async function getEmployeeInfo() {
 }
 
 const createHtmlFile = () => {
-    const html = generateHtml(team)
-    fs.writeFile('index.html', html, err => {
-        if (err) {
-          console.error(err);
-        }
-        console.log("Your team profile is ready!");
-      });
-  }
+  const html = generateHtml(team);
+  fs.writeFile("index.html", html, (err) => {
+    if (err) {
+      console.error(err);
+    }
+    console.log("Your team profile is ready!");
+  });
+};
 
 welcome();
