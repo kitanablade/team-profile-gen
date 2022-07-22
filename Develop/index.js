@@ -1,8 +1,11 @@
+const fs = require('fs');
 const inquirer = require("inquirer");
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Manager = require("./lib/Manager");
 const Intern = require("./lib/Intern");
+//const GenerateHtml = require("./util/generateHtml");
+const generateHtml = require("./util/generateHtml");
 
 const team = [];
 // Greets the user, then gets the manager's info
@@ -41,9 +44,10 @@ async function selectWorkers() {
       await selectWorkers();
       break;
     case "QUIT":
-      console.log("Your team profile is ready!");
       //quit = true;
       console.info(team);
+        createHtmlFile();
+      
   }
 }
 // }
@@ -128,5 +132,15 @@ async function getEmployeeInfo() {
     },
   ]);
 }
+
+const createHtmlFile = () => {
+    const html = generateHtml(team)
+    fs.writeFile('index.html', html, err => {
+        if (err) {
+          console.error(err);
+        }
+        console.log("Your team profile is ready!");
+      });
+  }
 
 welcome();
